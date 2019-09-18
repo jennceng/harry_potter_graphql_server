@@ -1,3 +1,11 @@
+const { ApolloServer, gql } = require("apollo-server");
+
+const typeDefs = gql`
+  type Query {
+    numberStudents: Int!
+  }
+`;
+
 let students = [
   {
     id: "988d60bb-6769-4b36-a26a-cea4da9f734c",
@@ -12,3 +20,15 @@ let students = [
     house: "GRYFFINDOR"
   }
 ];
+
+const resolvers = {
+  Query: {
+    numberStudents: () => students.length
+  }
+};
+
+const server = new ApolloServer({ typeDefs, resolvers });
+
+server.listen().then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`);
+});
