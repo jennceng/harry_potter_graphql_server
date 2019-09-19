@@ -1,8 +1,17 @@
 const { ApolloServer, gql } = require("apollo-server");
+const uuidv4 = require("uuid/v4");
 
 const typeDefs = gql`
+  type Student {
+    id: ID!
+    name: String
+    guardian: String
+    house: String
+  }
   type Query {
     numberStudents: Int!
+    allStudents: [Student!]
+    getStudentById(studentId: ID!): Student
   }
 `;
 
@@ -23,7 +32,10 @@ let students = [
 
 const resolvers = {
   Query: {
-    numberStudents: () => students.length
+    numberStudents: () => students.length,
+    allStudents: () => students,
+    getStudentById: (_, { studentId }) =>
+      students.find(student => student.id === studentId)
   }
 };
 
