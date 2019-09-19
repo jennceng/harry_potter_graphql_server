@@ -6,12 +6,25 @@ const typeDefs = gql`
     id: ID!
     name: String
     guardian: String
-    house: String
+    house: Houses
   }
   type Query {
     numberStudents: Int!
     allStudents: [Student!]
     getStudentById(studentId: ID!): Student
+  }
+  type Mutation {
+    createStudent(name: String!, guardian: String, house: Houses): Student
+  }
+  enum Houses {
+    "bravery, daring, nerve, and chivalry"
+    GRYFFINDOR
+    "hard work, dedication, patience, loyalty, and fair play"
+    HUFFLEPUFF
+    "intelligence, knowledge, and wit"
+    RAVENCLAW
+    "ambition, cunning and resourcefulness"
+    SLYTHERIN
   }
 `;
 
@@ -36,6 +49,18 @@ const resolvers = {
     allStudents: () => students,
     getStudentById: (_, { studentId }) =>
       students.find(student => student.id === studentId)
+  },
+  Mutation: {
+    createStudent: (_, { name, guardian, house }) => {
+      let newStudent = {
+        id: uuidv4(),
+        name,
+        guardian,
+        house
+      };
+      students = [...students, newStudent];
+      return newStudent;
+    }
   }
 };
 
